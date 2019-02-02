@@ -4,11 +4,11 @@
 	"description": "Move tasks that are computationally heavy or use synchronous io to a worker thread",
 	"main": "lib",
 	"devDependencies": {
-		"@phylum/pipeline": "^3.2.0",
+		"@phylum/pipeline": "^3.3.0",
 		"ava": "^1.2.0"
 	},
 	"peerDependencies": {
-		"@phylum/pipeline": "^3.2.0"
+		"@phylum/pipeline": "^3.3.0"
 	},
 	"repository": "github:phylumjs/worker-task",
 	"author": "Max J. Polster",
