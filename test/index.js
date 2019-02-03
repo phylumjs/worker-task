@@ -2,6 +2,8 @@
 
 const test = require('ava')
 const path = require('path')
+const {Writable} = require('stream')
+const {Worker} = require('worker_threads')
 const {Pipeline} = require('@phylum/pipeline')
 const {createWorkerTask, WorkerError} = require('..')
 
@@ -49,4 +51,24 @@ test('missing export', async t => {
 test('default export', async t => {
 	const task = createWorkerTask(path.join(__dirname, 'workers/default-export'))
 	t.is(await new Pipeline(task).enable(), 'foo')
+})
+
+test('task exports worker', async t => {
+	const task = createWorkerTask(path.join(__dirname, 'workers/empty'))
+	const pipeline = new Pipeline(task)
+	await pipeline.enable()
+	const worker = pipeline.getContext(task).exports.worker
+	t.true(worker instanceof Worker)
+	t.is(worker.stdin, null)
+})
+
+test('worker options', async t => {
+	const task = createWorkerTask(path.join(__dirname, 'workers/empty'), {
+		stdin: true
+	})
+	const pipeline = new Pipeline(task)
+	await pipeline.enable()
+	const worker = pipeline.getContext(task).exports.worker
+	t.true(worker instanceof Worker)
+	t.true(worker.stdin instanceof Writable)
 })
